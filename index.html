@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Quote Machine</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Additional meta tags, stylesheets, or scripts can be included here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Function to fetch and display a random quote
+            function fetchRandomQuote() {
+                var category = 'happiness';
+                $.ajax({
+                    method: 'GET',
+                    url: 'https://api.api-ninjas.com/v1/quotes?category=' + category,
+                    headers: { 'X-Api-Key': 'rjNLYETUnnKokf2Z1PLwRg==Oh8nzUGjalHdrlqf' },
+                    contentType: 'application/json',
+                    success: function(result) {
+    // Check if quotes are returned
+    if (result && result.length > 0) {
+        // Select a random quote from the response
+        var randomIndex = Math.floor(Math.random() * result.length);
+        var randomQuote = result[randomIndex];
+        // Set the quote text and author
+        $('#text').text(randomQuote.quote); // Update to 'randomQuote.quote' to access the quote text
+        $('#author').text(randomQuote.author);
+        var tweetText = '"' + randomQuote.text + '" - ' + randomQuote.author;
+var tweetUrl = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetText);
+$('#tweet-quote').attr('href', tweetUrl);
+                        } else {
+                            // If no quotes are returned, display a default message
+                            $('#text').text('No quotes available.');
+                            $('#author').text('');
+                        }
+                    },
+                    error: function(jqXHR) {
+                        console.error('Error: ', jqXHR.responseText);
+                    }
+                });
+            }
+
+            fetchRandomQuote();
+
+            $('#new-quote').click(function() {
+                fetchRandomQuote();
+            });
+        });
+    </script>
+</head>
+<body>
+    <wrapper id="quote-box">
+        <div id="text"></div>
+        <div id="author"></div>
+        <button id="new-quote">New Quote</button>
+        <a href="#" id="tweet-quote">Tweet Quote</a>
+    </wrapper>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+</body>
+</html>
